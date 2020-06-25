@@ -37,11 +37,12 @@ var getWeatherData = function(geoData) {
     })
 }
 var drawWeatherData = function(name,weatherData) {
+    // draws the current weather data to the page
     var currentData = weatherData.current
     var currentWeather = $("#current-weather")
     var uviData = currentData.uvi
     var uviSpan = currentWeather.find(".uvi")
-    currentWeather.removeClass("invisible")
+    currentWeather.removeClass("transparent")
     currentWeather.find(".city").text(name)
     currentWeather.find(".date").text(moment().format("(M/DD/YYYY)"))
     currentWeather.find("img").attr('src',`https://openweathermap.org/img/wn/${currentData.weather[0].icon}.png`)
@@ -59,6 +60,19 @@ var drawWeatherData = function(name,weatherData) {
     else {
         uviSpan.addClass("bg-danger text-white")
     }
+    // draws the forecasted weather data to the page
+    var forecastArray = weatherData.daily.slice(1,6)
+    var currentIndex = 0
+    $(".weather-card").each(function(){
+        var forecastData = forecastArray[currentIndex]
+        var card = $(this)
+        card.find(".date").text(moment.unix(forecastData.dt).format("M/DD/YYYY"))
+        card.find("img").attr('src',`https://openweathermap.org/img/wn/${forecastData.weather[0].icon}.png`)
+        card.find(".temperature").text(forecastData.temp.day)
+        card.find(".humidity").text(forecastData.humidity)
+        currentIndex++
+    })
+    $("#weather-card-container").removeClass("transparent")
 }
 var cityFormHandler = function(event) {
     event.preventDefault()

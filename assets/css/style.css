@@ -1,3 +1,6 @@
 .previous-search:hover {
     background-color: #bdbdbd;
 }
+.invisible {
+    opacity: 0;
+}

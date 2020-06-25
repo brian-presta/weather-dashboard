@@ -21,19 +21,44 @@ var geoEncode = function(city) {
     })
 }
 var getWeatherData = function(geoData) {
-    console.log(geoData)
-    apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${geoData.lat}&lon=${geoData.lon}&exclude=minutely,hourly&appid=d1cd3159572faa76d674791448dcb10b`
+    apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${geoData.lat}&lon=${geoData.lon}&exclude=minutely,hourly&units=imperial&appid=d1cd3159572faa76d674791448dcb10b`
     fetch(apiUrl)
     .then(function(response){
         if (response.ok) {
             response.json().then(function(data){
                 console.log(data)
+                drawWeatherData(geoData.name,data)
+                
             })
         }
         else {
-            alert("Unable to perform search")
+            alert("There was a problem fetching the weather data.")
         }
     })
+}
+var drawWeatherData = function(name,weatherData) {
+    var currentData = weatherData.current
+    var currentWeather = $("#current-weather")
+    var uviData = currentData.uvi
+    var uviSpan = currentWeather.find(".uvi")
+    currentWeather.removeClass("invisible")
+    currentWeather.find(".city").text(name)
+    currentWeather.find(".date").text(moment().format("(M/DD/YYYY)"))
+    currentWeather.find("img").attr('src',`https://openweathermap.org/img/wn/${currentData.weather[0].icon}.png`)
+    currentWeather.find(".temperature").text(currentData.temp)
+    currentWeather.find(".humidity").text(currentData.humidity)
+    currentWeather.find(".speed").text(currentData.wind_speed)
+    uviSpan.text(uviData)
+    uviSpan.removeClass("bg-success bg-warning bg-danger text-white")
+    if (uviData < 3) {
+        uviSpan.addClass("bg-success text-white")
+    }
+    else if (uviData > 2 && uviData < 6) {
+        uviSpan.addClass("bg-warning")
+    } 
+    else {
+        uviSpan.addClass("bg-danger text-white")
+    }
 }
 var cityFormHandler = function(event) {
     event.preventDefault()

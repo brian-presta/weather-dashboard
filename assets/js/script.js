@@ -2,7 +2,6 @@ var geoEncode = function(city) {
     // the API endpoint we want to use to fetch actual weather data only takes latitude and longitude as search parameters,
     // so we're only using this one as a geo encoder
     apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=d1cd3159572faa76d674791448dcb10b`
-    console.log(apiUrl)
     fetch(apiUrl)
     .then(function(response){
         if (response.ok) {
@@ -13,6 +12,7 @@ var geoEncode = function(city) {
                     lon:data.coord.lon
                 }
                 getWeatherData(geoData)
+                appendPreviousSearches(data.name)
             })
         }
         else {
@@ -26,9 +26,7 @@ var getWeatherData = function(geoData) {
     .then(function(response){
         if (response.ok) {
             response.json().then(function(data){
-                console.log(data)
                 drawWeatherData(geoData.name,data)
-                
             })
         }
         else {
@@ -73,6 +71,19 @@ var drawWeatherData = function(name,weatherData) {
         currentIndex++
     })
     $("#weather-card-container").removeClass("transparent")
+}
+var appendPreviousSearches = function(name) {
+    var newHistory = [name]
+    var searchHistory = JSON.parse(localStorage.getItem("search-history"))
+    if (searchHistory) {
+        newHistory = newHistory.concat(searchHistory.slice(0,9))
+    }
+    localStorage.setItem("search-history",JSON.stringify(newHistory))
+    drawSearchHistory()
+}
+var drawSearchHistory = function() {
+    var history = JSON.parse(localStorage.getItem("search-history"))
+    console.log(history)
 }
 var cityFormHandler = function(event) {
     event.preventDefault()

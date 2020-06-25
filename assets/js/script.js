@@ -42,7 +42,6 @@ var drawWeatherData = function(name,weatherData) {
     var uviSpan = currentWeather.find(".uvi")
     currentWeather.removeClass("transparent")
     currentWeather.find(".city").text(name)
-    currentWeather.find(".date").text(moment().format("(M/DD/YYYY)"))
     currentWeather.find("img").attr('src',`https://openweathermap.org/img/wn/${currentData.weather[0].icon}.png`)
     currentWeather.find(".temperature").text(currentData.temp)
     currentWeather.find(".humidity").text(currentData.humidity)
@@ -64,7 +63,6 @@ var drawWeatherData = function(name,weatherData) {
     $(".weather-card").each(function(){
         var forecastData = forecastArray[currentIndex]
         var card = $(this)
-        card.find(".date").text(moment.unix(forecastData.dt).format("M/DD/YYYY"))
         card.find("img").attr('src',`https://openweathermap.org/img/wn/${forecastData.weather[0].icon}.png`)
         card.find(".temperature").text(forecastData.temp.day)
         card.find(".humidity").text(forecastData.humidity)
@@ -107,6 +105,14 @@ var cityFormHandler = function(event) {
     }
     input.val('')
 }
+var drawDates = function() {
+    today = moment()
+    $(".date").each(function(){
+        $(this).text(today.format("M/DD/YYYY"))
+        today.add(1,'d')
+    })
+}
 $("#city-form").on("submit",cityFormHandler)
 $("#previous-search-container").on("click",historyClickHandler)
 drawSearchHistory()
+drawDates()

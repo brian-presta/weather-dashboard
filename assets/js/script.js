@@ -83,7 +83,17 @@ var appendPreviousSearches = function(name) {
 }
 var drawSearchHistory = function() {
     var history = JSON.parse(localStorage.getItem("search-history"))
-    console.log(history)
+    if (!history) {
+        return
+    }
+    container = $("#previous-search-container")
+    container.empty()
+    history.forEach(city => {
+        container.append(
+            $("<div>").text(city).addClass("border-bottom border-muted p-3 previous-search")
+        )
+    });
+    $(".previous-search").last().removeClass("border-bottom border-muted")
 }
 var cityFormHandler = function(event) {
     event.preventDefault()
@@ -95,3 +105,4 @@ var cityFormHandler = function(event) {
     input.val('')
 }
 $("#city-form").on("submit",cityFormHandler)
+drawSearchHistory()

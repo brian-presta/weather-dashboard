@@ -16,7 +16,7 @@ var geoEncode = function(city) {
             })
         }
         else {
-            alert("Unable to perform search")
+            alert("Unable to perform search.")
         }
     })
 }
@@ -95,6 +95,9 @@ var drawSearchHistory = function() {
     });
     $(".previous-search").last().removeClass("border-bottom border-muted")
 }
+var historyClickHandler = function(event) {
+    geoEncode(event.target.textContent)
+}
 var cityFormHandler = function(event) {
     event.preventDefault()
     var input = $(this).find("input")
@@ -105,4 +108,5 @@ var cityFormHandler = function(event) {
     input.val('')
 }
 $("#city-form").on("submit",cityFormHandler)
+$("#previous-search-container").on("click",historyClickHandler)
 drawSearchHistory()
